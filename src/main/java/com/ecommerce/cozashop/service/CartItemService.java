@@ -24,4 +24,17 @@ public class CartItemService {
     public Integer getQtyProduct(Long id) {
         return cartItemRepo.getQtyCart(id);
     }
+
+    public boolean checkProductAlreadyExists(Long id) {
+        return cartItemRepo.checkCartItem(id) == null ? false : true;
+    }
+
+    public CartItem getOneCartByProduct(Long id) {
+        return cartItemRepo.checkCartItem(id);
+    }
+
+    public void addToCart(CartItem item) {
+        cartItemRepo.save(item);
+    }
+
 }

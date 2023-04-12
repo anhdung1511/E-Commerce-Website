@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,9 @@ public class ProductController {
     @Autowired
     private ImageProductService imageProductService;
 
+    @Autowired
+    private CartItemService cartItemService;
+
     @GetMapping("/product")
     public String showProduct(Model model) {
         model.addAttribute("product_list", productService.getAllProduct());
@@ -46,6 +50,7 @@ public class ProductController {
         List<ProductSize> productSizeList = productSizeService.getAllSize(productItem.getId());
         List<String> strings = new ArrayList<>();
         List<ImageProduct> imageProducts = imageProductService.getAllImageById(productItem.getId());
+        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
         for (ProductSize p: productSizeList) {
             strings.add(sizeOptionService.getSizeProduct(p.getSizeOption().getId()));
         }
@@ -56,6 +61,7 @@ public class ProductController {
         model.addAttribute("product_item_list", productItemService.getProductItems());
         model.addAttribute("size_opt", strings);
         model.addAttribute("img_list", imageProducts);
+        model.addAttribute("cart_item", cartList);
         return "product-detail";
     }
 }

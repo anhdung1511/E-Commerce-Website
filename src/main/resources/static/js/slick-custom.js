@@ -152,8 +152,8 @@
 
                 arrows: true,
                 appendArrows: $(this).find('.wrap-slick3-arrows'),
-                prevArrow:'<button class="arrow-slick3 prev-slick3"><i class="fa fa-angle-left" aria-hidden="true"></i></button>',
-                nextArrow:'<button class="arrow-slick3 next-slick3"><i class="fa fa-angle-right" aria-hidden="true"></i></button>',
+                prevArrow:'<div class="arrow-slick3 prev-slick3"><i class="fa fa-angle-left" aria-hidden="true"></i></div>',
+                nextArrow:'<div class="arrow-slick3 next-slick3"><i class="fa fa-angle-right" aria-hidden="true"></i></div>',
 
                 dots: true,
                 appendDots: $(this).find('.wrap-slick3-dots'),
