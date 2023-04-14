@@ -1,7 +1,9 @@
 package com.ecommerce.cozashop.service;
 
 import com.ecommerce.cozashop.model.CartItem;
+import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.repository.CartItemRepo;
+import com.ecommerce.cozashop.repository.ProductItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +35,27 @@ public class CartItemService {
         return cartItemRepo.checkCartItem(id);
     }
 
+    public CartItem getOneCartByIdCart(Integer id) {
+        return cartItemRepo.getCartItemById(id);
+    }
+
     public void addToCart(CartItem item) {
         cartItemRepo.save(item);
     }
 
+    public void removeCartItem(CartItem id) {
+        cartItemRepo.delete(id);
+    }
+
+    public double getTotal(List<CartItem> list) {
+        double total = 0;
+        for (CartItem c : list) {
+           total += (c.getQty() * c.getItem().getPrice());
+        }
+        return total;
+    }
+
+    public void deleteAllCartWhenOrdered(User user) {
+        cartItemRepo.deleteAllByUser(user);
+    }
 }

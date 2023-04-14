@@ -1,17 +1,17 @@
 package com.ecommerce.cozashop.controller;
 
 import com.ecommerce.cozashop.model.CartItem;
-import com.ecommerce.cozashop.model.Product;
+import com.ecommerce.cozashop.model.ProductItem;
 import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,51 +26,90 @@ public class CartController {
     @Autowired
     private CartItemService cartItemService;
 
-    @GetMapping("/shoping-cart")
+    @GetMapping("/shopping-cart")
     public String show(Model model) {
-        List<Product> list = new ArrayList<>();
-        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
-        double total = 0;
-        Product product;
-        for (CartItem cart: cartList) {
-            product = productService.getProduct(cart.getProduct().getId());
-            total += productItemService.getOneProduct(product.getId()).getPrice() * cart.getQty();
-            list.add(product);
-        }
-        String totalstr = String.valueOf(((double) Math.round(total * 100) / 100));
-        model.addAttribute("product_list", productService.getAllProduct());
-        model.addAttribute("product_item_list", productItemService.getProductItems());
-        model.addAttribute("cart_item", cartList);
-        model.addAttribute("cart_prod", list);
-        model.addAttribute("total", totalstr);
 
-        return "shoping-cart";
+        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
+        double total = cartItemService.getTotal(cartList);
+
+        model.addAttribute("cart_item", cartList);
+        model.addAttribute("total", total);
+        model.addAttribute("countCart", cartList.size());
+
+        if (cartList.isEmpty()) {
+            return "shopping-cart-empty";
+        }
+        return "shopping-cart";
     }
 
     @GetMapping("/add-to-cart/{id}/{qty}")
     @ResponseBody
     public Integer addToCart(@PathVariable(name = "id") Long id,
-                            @PathVariable(name = "qty") Integer qty,
-                            Model model) {
+                            @PathVariable(name = "qty") Integer qty) {
 
         List<CartItem> list = cartItemService.getAllProductCartWithUser(1L);
 
         if (cartItemService.checkProductAlreadyExists(id)) {
             CartItem item = cartItemService.getOneCartByProduct(id);
+
             item.setQty(item.getQty() + qty);
             cartItemService.addToCart(item);
+
             return list.size();
         }
-        Product product = new Product();
+        ProductItem product = new ProductItem();
         User user = new User();
         CartItem cartItem = new CartItem();
+
         product.setId(id);
         user.setId(1L);
         cartItem.setQty(qty);
-        cartItem.setProduct(product);
+        cartItem.setItem(product);
         cartItem.setUser(user);
+
         cartItemService.addToCart(cartItem);
         list = cartItemService.getAllProductCartWithUser(1L);
+
         return list.size();
     }
+
+    @RequestMapping( value = "/remove-cart-item/{cid}", produces = "application/json")
+    @ResponseBody
+    public String removeCartItem(@PathVariable(name = "cid") Integer id) {
+
+        CartItem item = cartItemService.getOneCartByIdCart(id);
+        cartItemService.removeCartItem(item);
+
+        List<CartItem> list = cartItemService.getAllProductCartWithUser(1L);
+        double total = cartItemService.getTotal(list);
+        JSONObject data = new JSONObject();
+
+        data.put("size", list.size());
+        data.put("total", total);
+
+        System.out.println("Remove successfully");
+
+        return data.toString();
+    }
+
+
+    @RequestMapping(value = "/update-qty/{cid}/{qty}", produces = "application/json")
+    @ResponseBody
+    public String changeQty(@PathVariable(name = "cid") Integer id,
+                            @PathVariable(name = "qty") Integer qty) {
+        CartItem cartItem = cartItemService.getOneCartByIdCart(id);
+
+        cartItem.setQty(qty);
+        cartItemService.addToCart(cartItem);
+
+        List<CartItem> list = cartItemService.getAllProductCartWithUser(1L);
+        double subTotal = cartItemService.getTotal(list);
+
+        JSONObject info = new JSONObject();
+        info.put("subTotal", subTotal);
+        info.put("sumItem", qty * cartItem.getItem().getPrice());
+
+        return info.toString();
+    }
+
 }

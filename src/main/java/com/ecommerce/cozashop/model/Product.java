@@ -34,9 +34,4 @@ public class Product {
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
     @ToString.Exclude   // Do not use this field in toString()
     private ProductCategory productCategory;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<CartItem> cartItems;
 }

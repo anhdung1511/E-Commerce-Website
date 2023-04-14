@@ -38,30 +38,33 @@ public class ProductController {
 
     @GetMapping("/product")
     public String showProduct(Model model) {
+        int size = cartItemService.getAllProductCartWithUser(1L).size();
         model.addAttribute("product_list", productService.getAllProduct());
         model.addAttribute("product_item_list", productItemService.getProductItems());
+        model.addAttribute("size", size);
         return "product";
     }
 
     @GetMapping("/product-detail/{id}")
     public String showProductDetail(@PathVariable(name = "id") Long id, Model model) {
         ProductItem productItem = productItemService.getOneProduct(id);
-        Product product = productService.getProduct(id);
+       //Product product = productService.getProduct(id);
         List<ProductSize> productSizeList = productSizeService.getAllSize(productItem.getId());
         List<String> strings = new ArrayList<>();
         List<ImageProduct> imageProducts = imageProductService.getAllImageById(productItem.getId());
-        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
+        int size = cartItemService.getAllProductCartWithUser(1L).size();
         for (ProductSize p: productSizeList) {
             strings.add(sizeOptionService.getSizeProduct(p.getSizeOption().getId()));
         }
 
         model.addAttribute("prodItem", productItem);
-        model.addAttribute("prod", product);
-        model.addAttribute("product_list", productService.getAllProduct());
+        //model.addAttribute("prod", product);
+        //model.addAttribute("product_list", productService.getAllProduct());
         model.addAttribute("product_item_list", productItemService.getProductItems());
         model.addAttribute("size_opt", strings);
         model.addAttribute("img_list", imageProducts);
-        model.addAttribute("cart_item", cartList);
+        model.addAttribute("size", size);
+
         return "product-detail";
     }
 }

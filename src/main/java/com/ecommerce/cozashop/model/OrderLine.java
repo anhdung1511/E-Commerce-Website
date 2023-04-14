@@ -25,7 +25,7 @@ public class OrderLine {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "shop_oder_id", nullable = false)
+    @JoinColumn(name = "shop_order_id", nullable = false)
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
     @ToString.Exclude   // Do not use this field in toString()
     private ShopOrder shopOrder;

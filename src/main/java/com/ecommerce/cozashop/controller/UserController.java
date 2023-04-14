@@ -67,11 +67,12 @@ public class UserController {
                 Role role = new Role();
                 Base64.Encoder encoder = Base64.getEncoder();
                 String encodeStr = encoder.encodeToString(user.getPassword().getBytes(StandardCharsets.UTF_8));
+
                 user.setPassword(encodeStr);
                 role.setId(3);
                 user.setRole(role);
                 user.setStatus(true);
-                System.out.println(user.toString());
+
                 userService.registerAccount(user);
                 return "redirect:acount/login";
             }

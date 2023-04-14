@@ -35,6 +35,11 @@ public class ProductItem {
     @ToString.Exclude   // Do not use this field in toString()
     private Product product_id;
 
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<CartItem> cartItems;
+
     @OneToMany(mappedBy = "productItem", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
     @ToString.Exclude   // Do not use this field in toString()
@@ -49,4 +54,7 @@ public class ProductItem {
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
     @ToString.Exclude   // Do not use this field in toString()
     private List<ImageProduct> imageProducts;
+
+
+
 }

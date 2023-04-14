@@ -91,7 +91,7 @@
                         <i class="zmdi zmdi-search"></i>
                     </div>
 
-                    <a th:href="@{/shoping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" th:data-notify="${#lists.size(cart_item)}">
+                    <a th:href="@{/shopping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" th:data-notify="${countCart}">
                         <i class="zmdi zmdi-shopping-cart"></i>
                     </a>
 
@@ -127,7 +127,7 @@
             Home
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
-        <a th:href="@{/shoping-cart}" class="stext-109 cl8 hov-cl1 trans-04">
+        <a th:href="@{/shopping-cart}" class="stext-109 cl8 hov-cl1 trans-04">
             Cart
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
@@ -140,7 +140,7 @@
 
 
 <!-- Shoping Cart -->
-<form method="post" class="bg0 p-t-75 p-b-85">
+<form th:action="@{/check-out}" method="post" class="bg0 p-t-75 p-b-85">
     <div class="container">
         <div class="row">
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
@@ -155,26 +155,20 @@
                                 <th class="column-5">Total</th>
                             </tr>
 
-                            <tr th:each="prod_in_cart : ${cart_prod}" class="table_row">
+                            <tr th:each="cart : ${cart_item}" class="table_row">
                                 <td class="column-1">
-                                    <a th:href="@{/product-detail/{id}(id = *{prod_in_cart.getId()})}" class="how-itemcart1">
-                                        <img th:src="@{*{prod_in_cart.getProduct_img()}}" alt="IMG">
+                                    <a th:href="@{/product-detail/{id}(id = *{cart.item.id})}" class="how-itemcart1">
+                                        <img th:src="@{*{cart.item.product_id.product_img}}" alt="IMG">
                                     </a>
                                 </td>
                                 <td class="column-2"
-                                    th:each="pri: ${product_item_list}"
-                                    th:if="(*{pri.getProduct_id().getId()} == *{prod_in_cart.getId()})"
-                                    th:text="*{prod_in_cart.getProduct_name()}"></td>
+                                    th:text="*{cart.item.product_id.product_name}"></td>
                                 <td class="column-3 qty-item1"
-                                    th:each="cart : ${cart_item}"
-                                    th:if="(*{cart.getProduct().getId() == prod_in_cart.getId()})"
                                     th:text="*{cart.getQty()}">
                                 </td>
                                 <td class="column-4 price-item"
-                                    th:each="pri: ${product_item_list}"
-                                    th:if="(*{pri.getProduct_id().getId()} == *{prod_in_cart.getId()})"
-                                    th:text="('$'+ *{pri.getPrice()})"></td>
-                                <td class="column-5 total-item1"></td>
+                                    th:text="('$'+ *{cart.item.price})"></td>
+                                <td class="column-5 total-item1" th:text="*{cart.qty * cart.item.price}"></td>
                             </tr>
                         </table>
                     </div>
@@ -195,7 +189,7 @@
                         </div>
 
                         <div class="size-209">
-                            <span class="mtext-110 cl2 sub-total1"></span>
+                            <span class="mtext-110 cl2 sub-total1" th:text="${subTotal}"></span>
                         </div>
                     </div>
 
@@ -220,7 +214,7 @@
 								</span>
                         </div>
 
-                        <div class="size-209 p-r-0-sm w-full-ssm">
+                        <div th:object="${address}" class="size-209 p-r-0-sm w-full-ssm">
                             <div>
                                 <div class="bor8 bg0 m-b-12">
                                     <input class="stext-111 cl8 plh3 size-111 p-lr-15"
@@ -262,7 +256,7 @@
                         </div>
                     </div>
 
-                    <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                    <button type="submit" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
                         Complete order
                     </button>
                 </div>
@@ -270,8 +264,6 @@
         </div>
     </div>
 </form>
-
-
 
 
 <!-- Footer -->

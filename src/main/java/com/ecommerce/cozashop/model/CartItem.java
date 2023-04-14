@@ -25,10 +25,10 @@ public class CartItem {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name="product_id", nullable=false)
+    @JoinColumn(name="product_item_id", nullable=false)
     @EqualsAndHashCode.Exclude // Do not use this field in equals and hashcode
     @ToString.Exclude
-    private Product product;
+    private ProductItem item;
 
     @NonNull
     private Integer qty;

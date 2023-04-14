@@ -33,22 +33,11 @@ public class HomeController {
 
     @GetMapping("/home")
     public String showHome(Model model) {
+        int totalCart = cartItemService.getAllProductCartWithUser(1L).size();
 
-        List<Product> list = new ArrayList<>();
-        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
-        double total = 0;
-        Product product;
-        for (CartItem cart: cartList) {
-            product = productService.getProduct(cart.getProduct().getId());
-            total += productItemService.getOneProduct(product.getId()).getPrice() * cart.getQty();
-            list.add(product);
-        }
-        String totalstr = String.valueOf(((double) Math.round(total * 100) / 100));
         model.addAttribute("product_list", productService.getAllProduct());
         model.addAttribute("product_item_list", productItemService.getProductItems());
-        model.addAttribute("cart_item", cartList);
-        model.addAttribute("cart_prod", list);
-        model.addAttribute("total", totalstr);
+        model.addAttribute("totalCart", totalCart);
         return "index";
     }
 

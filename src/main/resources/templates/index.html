@@ -91,7 +91,7 @@
 						<i class="zmdi zmdi-search"></i>
 					</div>
 
-					<a th:href="@{/shoping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" th:data-notify="${#lists.size(cart_item)}">
+					<a th:href="@{/shopping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" th:data-notify="${totalCart}">
 						<i class="zmdi zmdi-shopping-cart"></i>
 					</a>
 
@@ -133,38 +133,6 @@
 
 			<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
 				<i class="zmdi zmdi-close"></i>
-			</div>
-		</div>
-
-		<div class="header-cart-content flex-w js-pscroll">
-			<ul th:each="prod_in_cart : ${cart_prod}" class="header-cart-wrapitem w-full">
-				<li class="header-cart-item flex-w flex-t m-b-12">
-					<div th:href="@{/product-detail/{id}(id = *{prod_in_cart.getId()})}" class="header-cart-item-img">
-						<img th:src="@{*{prod_in_cart.getProduct_img()}}" alt="IMG">
-					</div>
-
-					<div th:each="pri: ${product_item_list}" th:if="(*{pri.getProduct_id().getId()} == *{prod_in_cart.getId()})" class="header-cart-item-txt p-t-8">
-						<a th:href="@{/product-detail/{id}(id = *{prod_in_cart.getId()})}" th:text="*{prod_in_cart.getProduct_name()}" class="header-cart-item-name m-b-18 hov-cl1 trans-04" ></a>
-						<span th:each="cart : ${cart_item}"
-							  th:if="(*{cart.getProduct().getId() == prod_in_cart.getId()})"
-							  th:text="(*{cart.getQty()}+' x $'+ *{pri.getPrice()})"
-							  class="header-cart-item-info"></span>
-					</div>
-				</li>
-			</ul>
-			<div class="w-full">
-				<div th:text="'Total: $' + ${total}" class="header-cart-total w-full p-tb-40">
-				</div>
-
-				<div class="header-cart-buttons flex-w w-full">
-					<a th:href="@{/shoping-cart}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
-						View Cart
-					</a>
-
-					<a th:href="@{/shoping-cart}" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
-						Check Out
-					</a>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -322,19 +290,19 @@
 		<!--Show all products-->
 		<div class="row isotope-grid">
 			<!--Show product by category, T-Shirts and Polo-->
-			<div th:each="prod : ${product_list}" th:if="*{prod.getProductCategory().getId() == 1 || prod.getProductCategory().getId() == 6}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item polo">
+			<div th:each="prod : ${product_list}" th:if="*{prod.productCategory.id == 1 || prod.productCategory.id == 6}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item polo">
 				<!-- Block2 -->
 				<div class="block2">
 					<div class="block2-pic hov-img0">
-						<img th:src="@{*{prod.getProduct_img()}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
 							Show Detail
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">
 						<div class="block2-txt-child1 flex-col-l ">
-							<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" th:text="*{prod.getProduct_name()}"  class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
-							<span th:each="pri: ${product_item_list}" th:if="(*{pri.getProduct_id().getId()} == *{prod.getId()})" th:text="'$'+ *{pri.getPrice()}" class="stext-105 cl3">$[[*pri.getPrice()]]</span>
+							<a th:href="@{/product-detail}" th:text="*{prod.product_name}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
+							<span th:each="pri: ${product_item_list}" th:if="(*{pri.product_id.id} == *{prod.id})" th:text="'$'+ *{pri.price}" class="stext-105 cl3"></span>
 						</div>
 						<div class="block2-txt-child2 flex-r p-t-3">
 							<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
@@ -347,19 +315,19 @@
 			</div>
 
 			<!--Show product by category, Hoodie-->
-			<div th:each="prod : ${product_list}" th:if="*{prod.getProductCategory().getId() == 2}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item hoodie">
+			<div th:each="prod : ${product_list}" th:if="*{prod.productCategory.id == 2}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item hoodie">
 				<!-- Block2 -->
 				<div class="block2">
 					<div class="block2-pic hov-img0">
-						<img th:src="@{*{prod.getProduct_img()}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
 							Show Detail
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">
 						<div class="block2-txt-child1 flex-col-l ">
-							<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" th:text="*{prod.getProduct_name()}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
-							<span th:each="pri: ${product_item_list}" th:if="(*{pri.getProduct_id().getId()} == *{prod.getId()})" th:text="'$ '+ *{pri.getPrice()}" class="stext-105 cl3"></span>
+							<a th:href="@{/product-detail}" th:text="*{prod.product_name}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
+							<span th:each="pri: ${product_item_list}" th:if="(*{pri.product_id.id} == *{prod.id})" th:text="'$'+ *{pri.price}" class="stext-105 cl3"></span>
 						</div>
 						<div class="block2-txt-child2 flex-r p-t-3">
 							<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
@@ -371,21 +339,20 @@
 				</div>
 			</div>
 
-
 			<!--Show product by category, Pants and Shorts-->
-			<div th:each="prod : ${product_list}" th:if="*{prod.getProductCategory().getId() == 3 || prod.getProductCategory().getId() == 4}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item pants">
+			<div th:each="prod : ${product_list}" th:if="*{prod.productCategory.id == 3|| prod.productCategory.id == 4}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item pants">
 				<!-- Block2 -->
 				<div class="block2">
 					<div class="block2-pic hov-img0">
-						<img th:src="@{*{prod.getProduct_img()}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
 							Show Detail
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">
 						<div class="block2-txt-child1 flex-col-l ">
-							<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" th:text="*{prod.getProduct_name()}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
-							<span th:each="pri: ${product_item_list}" th:if="(*{pri.getProduct_id().getId()} == *{prod.getId()})" th:text="'$ '+ *{pri.getPrice()}" class="stext-105 cl3"></span>
+							<a th:href="@{/product-detail}" th:text="*{prod.product_name}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
+							<span th:each="pri: ${product_item_list}" th:if="(*{pri.product_id.id} == *{prod.id})" th:text="'$'+ *{pri.price}" class="stext-105 cl3"></span>
 						</div>
 						<div class="block2-txt-child2 flex-r p-t-3">
 							<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
@@ -398,19 +365,19 @@
 			</div>
 
 			<!--Show product by category, Backpack-->
-			<div th:each="prod : ${product_list}" th:if="*{prod.getProductCategory().getId() == 5}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item bag">
+			<div th:each="prod : ${product_list}" th:if="*{prod.productCategory.id == 5}" class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item bag">
 				<!-- Block2 -->
 				<div class="block2">
 					<div class="block2-pic hov-img0">
-						<img th:src="@{*{prod.getProduct_img()}}" alt="IMG-PRODUCT">
-						<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+						<img th:src="@{*{prod.product_img}}" alt="IMG-PRODUCT">
+						<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
 							Show Detail
 						</a>
 					</div>
 					<div class="block2-txt flex-w flex-t p-t-14">
 						<div class="block2-txt-child1 flex-col-l ">
-							<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" th:text="*{prod.getProduct_name()}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
-							<span th:each="pri: ${product_item_list}" th:if="(*{pri.getProduct_id().getId()} == *{prod.getId()})" th:text="'$ '+ *{pri.getPrice()}" class="stext-105 cl3"></span>
+							<a th:href="@{/product-detail}" th:text="*{prod.product_name}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"></a>
+							<span th:each="pri: ${product_item_list}" th:if="(*{pri.product_id.id} == *{prod.id})" th:text="'$'+ *{pri.price}" class="stext-105 cl3"></span>
 						</div>
 						<div class="block2-txt-child2 flex-r p-t-3">
 							<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
@@ -421,7 +388,6 @@
 					</div>
 				</div>
 			</div>
-
 		</div>
 
 		<!-- Load more -->

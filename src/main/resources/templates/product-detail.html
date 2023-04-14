@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>[[${prod.getProduct_name()}]]</title>
+	<title th:text="${prodItem.product_id.product_name}"></title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--===============================================================================================-->
@@ -91,7 +91,7 @@
 							<i class="zmdi zmdi-search"></i>
 						</div>
 
-						<a th:href="@{/shoping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti count-cart" th:data-notify="${#lists.size(cart_item)}">
+						<a th:href="@{/shopping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti count-cart" th:data-notify="${size}">
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</a>
 
@@ -134,7 +134,7 @@
 				Product
 				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
 			</a>
-			<span th:text="${prod.getProduct_name()}" class="stext-109 cl4"></span>
+			<span th:text="${prodItem.product_id.product_name}" class="stext-109 cl4"></span>
 		</div>
 	</div>
 		
@@ -164,11 +164,10 @@
 				</div>
 					
 				<div class="col-md-6 col-lg-5 p-b-30">
-					<div class="p-r-50 p-t-5 p-lr-0-lg product-item-detail" th:data-id="${prod.id}">
-						<h4 th:text="${prod.getProduct_name()}" class="mtext-105 cl2 js-name-detail p-b-14"></h4>
+					<div class="p-r-50 p-t-5 p-lr-0-lg product-item-detail" th:data-id="${prodItem.id}">
+						<h4 th:text="${prodItem.product_id.product_name}" class="mtext-105 cl2 js-name-detail p-b-14"></h4>
 
-						<span class="mtext-106 cl2">
-							$[[${prodItem.getPrice()}]]
+						<span class="mtext-106 cl2" th:text="'$' + ${prodItem.price}">
 						</span>
 						<!--  -->
 						<div class="p-t-33">
@@ -246,9 +245,7 @@
 						<!-- - -->
 						<div class="tab-pane fade show active" id="description" role="tabpanel">
 							<div class="how-pos2 p-lr-15-md">
-								<p class="stext-102 cl6">
-									[[${prod.getDescription()}]]
-								</p>
+								<p class="stext-102 cl6" th:text="${prodItem.product_id.description}"></p>
 							</div>
 						</div>
 					</div>
@@ -257,9 +254,7 @@
 		</div>
 
 		<div class="bg6 flex-c-m flex-w size-302 m-t-73 p-tb-15">
-			<span class="stext-107 cl6 p-lr-25">
-				SKU: [[${prodItem.getSKU()}]]
-			</span>
+			<span class="stext-107 cl6 p-lr-25" th:text="'SKU: ' + ${prodItem.SKU}"></span>
 		</div>
 	</section>
 
@@ -276,23 +271,23 @@
 			<!-- Slide2 -->
 			<div class="wrap-slick2">
 				<div class="slick2">
-					<div th:each="prod : ${product_list}" class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
+					<div th:each="prod : ${product_item_list}" class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-pic hov-img0">
-								<img th:src="@{*{prod.getProduct_img()}}" alt="IMG-PRODUCT">
+								<img th:src="@{*{prod.product_id.product_img}}" alt="IMG-PRODUCT">
 
-								<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+								<a th:href="@{/product-detail/{id}(id = *{prod.id})}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
 									Show Detail
 								</a>
 							</div>
 
 							<div class="block2-txt flex-w flex-t p-t-14">
 								<div class="block2-txt-child1 flex-col-l ">
-									<a th:href="@{/product-detail/{id}(id = *{prod.getId()})}" th:text="*{prod.getProduct_name()}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+									<a th:href="@{/product-detail/{id}(id = *{prod.id})}" th:text="*{prod.product_id.product_name}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 									</a>
 
-									<span th:each="pri: ${product_item_list}" th:if="(*{pri.getProduct_id().getId()} == *{prod.getId()})" th:text="'$ '+ *{pri.getPrice()}" class="stext-105 cl3">
+									<span th:text="'$'+ *{prod.price}" class="stext-105 cl3">
 									</span>
 								</div>
 
