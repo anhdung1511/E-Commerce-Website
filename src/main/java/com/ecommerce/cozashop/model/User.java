@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Controller;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity

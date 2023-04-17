@@ -49,8 +49,11 @@
 					</div>
 
 					<div class="right-top-bar flex-w h-full">
-						<a th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
-							My account
+						<a th:if="${session.isEmpty()}" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
+							Sign in
+						</a>
+						<a th:if="${!session.isEmpty()}" th:href="@{/logout}" class="flex-c-m trans-04 p-lr-25">
+							Log out
 						</a>
 					</div>
 				</div>
