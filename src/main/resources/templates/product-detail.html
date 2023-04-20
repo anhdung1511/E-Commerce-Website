@@ -94,7 +94,14 @@
 							<i class="zmdi zmdi-search"></i>
 						</div>
 
-						<a th:href="@{/shopping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti count-cart" th:data-notify="${size}">
+						<a th:href="@{/shopping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti count-cart"
+						   th:if="${!session.isEmpty()}"
+						   th:data-notify="${session.totalCart}">
+							<i class="zmdi zmdi-shopping-cart"></i>
+						</a>
+						<a th:href="@{/shopping-cart}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
+						   th:if="${session.isEmpty()}"
+						   th:data-notify="0">
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</a>
 

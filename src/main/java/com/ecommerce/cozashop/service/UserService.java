@@ -25,6 +25,10 @@ public class UserService {
         return userRepo.findByEmail(email);
     }
 
+    public Long getIdUserByEmail(String email) {
+        return userRepo.findIdByEmail(email);
+    }
+
     public void registerAccount(User user) {
         Role role = new Role();
         Base64.Encoder encoder = Base64.getEncoder();

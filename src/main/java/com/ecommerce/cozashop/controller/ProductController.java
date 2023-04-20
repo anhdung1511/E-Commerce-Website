@@ -3,6 +3,7 @@ package com.ecommerce.cozashop.controller;
 import com.ecommerce.cozashop.model.*;
 import com.ecommerce.cozashop.service.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.query.JSqlParserUtils;
 import org.springframework.stereotype.Controller;
@@ -33,15 +34,12 @@ public class ProductController {
     @Autowired
     private ImageProductService imageProductService;
 
-    @Autowired
-    private CartItemService cartItemService;
+
 
     @GetMapping("/product")
     public String showProduct(Model model) {
-        int size = cartItemService.getAllProductCartWithUser(1L).size();
         model.addAttribute("product_list", productService.getAllProduct());
         model.addAttribute("product_item_list", productItemService.getProductItems());
-        model.addAttribute("size", size);
         return "product";
     }
 
@@ -52,7 +50,7 @@ public class ProductController {
         List<ProductSize> productSizeList = productSizeService.getAllSize(productItem.getId());
         List<String> strings = new ArrayList<>();
         List<ImageProduct> imageProducts = imageProductService.getAllImageById(productItem.getId());
-        int size = cartItemService.getAllProductCartWithUser(1L).size();
+
         for (ProductSize p: productSizeList) {
             strings.add(sizeOptionService.getSizeProduct(p.getSizeOption().getId()));
         }
@@ -63,7 +61,6 @@ public class ProductController {
         model.addAttribute("product_item_list", productItemService.getProductItems());
         model.addAttribute("size_opt", strings);
         model.addAttribute("img_list", imageProducts);
-        model.addAttribute("size", size);
 
         return "product-detail";
     }

@@ -6,6 +6,8 @@ import com.ecommerce.cozashop.model.User;
 import com.ecommerce.cozashop.service.CartItemService;
 import com.ecommerce.cozashop.service.ProductItemService;
 import com.ecommerce.cozashop.service.ProductService;
+import com.ecommerce.cozashop.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -26,10 +28,20 @@ public class CartController {
     @Autowired
     private CartItemService cartItemService;
 
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/shopping-cart")
     public String show(Model model) {
 
-        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
+        User user = (User) session.getAttribute("user");
+
+        user.setId(userService.getIdUserByEmail(user.getEmail()));
+
+        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(user.getId());
         double total = cartItemService.getTotal(cartList);
 
         model.addAttribute("cart_item", cartList);
@@ -47,7 +59,11 @@ public class CartController {
     public Integer addToCart(@PathVariable(name = "id") Long id,
                             @PathVariable(name = "qty") Integer qty) {
 
-        List<CartItem> list = cartItemService.getAllProductCartWithUser(1L);
+        User user = (User) session.getAttribute("user");
+
+        user.setId(userService.getIdUserByEmail(user.getEmail()));
+
+        List<CartItem> list = cartItemService.getAllProductCartWithUser(user.getId());
 
         if (cartItemService.checkProductAlreadyExists(id)) {
             CartItem item = cartItemService.getOneCartByProduct(id);
@@ -58,17 +74,21 @@ public class CartController {
             return list.size();
         }
         ProductItem product = new ProductItem();
-        User user = new User();
+
+
         CartItem cartItem = new CartItem();
 
         product.setId(id);
-        user.setId(1L);
         cartItem.setQty(qty);
         cartItem.setItem(product);
         cartItem.setUser(user);
 
         cartItemService.addToCart(cartItem);
-        list = cartItemService.getAllProductCartWithUser(1L);
+        list = cartItemService.getAllProductCartWithUser(user.getId());
+
+        session.removeAttribute("totalCart");
+        session.setAttribute("totalCart", list.size());
+
 
         return list.size();
     }
@@ -80,9 +100,17 @@ public class CartController {
         CartItem item = cartItemService.getOneCartByIdCart(id);
         cartItemService.removeCartItem(item);
 
-        List<CartItem> list = cartItemService.getAllProductCartWithUser(1L);
+        User user = (User) session.getAttribute("user");
+
+        user.setId(userService.getIdUserByEmail(user.getEmail()));
+
+        List<CartItem> list = cartItemService.getAllProductCartWithUser(user.getId());
         double total = cartItemService.getTotal(list);
         JSONObject data = new JSONObject();
+
+
+        session.removeAttribute("totalCart");
+        session.setAttribute("totalCart", list.size());
 
         data.put("size", list.size());
         data.put("total", total);
@@ -102,7 +130,11 @@ public class CartController {
         cartItem.setQty(qty);
         cartItemService.addToCart(cartItem);
 
-        List<CartItem> list = cartItemService.getAllProductCartWithUser(1L);
+        User user = (User) session.getAttribute("user");
+
+        user.setId(userService.getIdUserByEmail(user.getEmail()));
+
+        List<CartItem> list = cartItemService.getAllProductCartWithUser(user.getId());
         double subTotal = cartItemService.getTotal(list);
 
         JSONObject info = new JSONObject();

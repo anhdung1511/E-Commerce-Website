@@ -2,6 +2,7 @@ package com.ecommerce.cozashop.controller;
 
 import com.ecommerce.cozashop.model.*;
 import com.ecommerce.cozashop.service.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +32,18 @@ public class OrderController {
     @Autowired
     private OrderLineService orderLineService;
 
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/check-out")
     public String show(Model model) {
-        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
+        User user = (User) session.getAttribute("user");
+
+        user.setId(userService.getIdUserByEmail(user.getEmail()));
+        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(user.getId());
 
         double total = cartItemService.getTotal(cartList) + 15.00;
         double subTotal = cartItemService.getTotal(cartList);
@@ -48,10 +58,11 @@ public class OrderController {
 
     @PostMapping("/check-out")
     public String checkOut(@ModelAttribute CartItem item, @ModelAttribute Address fullAddress) {
-        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(1L);
 
-        User user = new User();
-        user.setId(1L);
+        User user = (User) session.getAttribute("user");
+
+        user.setId(userService.getIdUserByEmail(user.getEmail()));
+        List<CartItem> cartList = cartItemService.getAllProductCartWithUser(user.getId());
 
         ShopOrder shopOrder = new ShopOrder(user, LocalDate.now(), fullAddress.toString(), cartItemService.getTotal(cartList), true);
         shopOrderService.createNewOrder(shopOrder);
